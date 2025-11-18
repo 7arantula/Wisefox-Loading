@@ -1,0 +1,109 @@
+
+body{
+    background-color: rgb(255, 255, 255);    
+}
+@font-face {
+    font-family: 'Technology';
+    src: url(./src/fonts/technology/Technology-Bold.ttf);
+}
+
+#canvas{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    transform:scale(1.5)
+    
+}
+
+
+#foxWrapper{
+    display: flex;
+    position: relative; 
+    justify-content: center;
+    flex-direction: column;
+    height: 200px;
+    width: 200px;
+
+
+}
+
+#foxbody{
+    display: flex;
+    height: 200px;
+    width: 200px;
+    background-color: rgb(0, 128, 0);
+    clip-path: path("M 65 96 C 60 130, 35 130 ,      42 179 Q 43 189, 47 198 L 53 197 L 56 185      C 67 188, 83 182, 89 195 C 90 200, 95 200, 99 195 C 100 192, 106 183, 120 192 C 130 200, 150 200, 161 190 Q 178 170,       175 140 C  170 120, 142 70, 155 40 C 130 80, 132 98, 140 120        C 146 140, 142 157, 131 157 C 120 157, 125 135, 120 127 C 110 110, 102 110, 102 93 L 102 94 Z");
+    position: absolute;
+    top: 0;
+    left: 0;
+    --tail-tip-y: 40;
+}
+
+#foxhead{
+    display: flex;
+    height: 200px;
+    width: 200px;
+    background-color: green;
+    clip-path: path("M 50 0 Q 56 5, 59 13 Q 86 12, 100 25 Q 113 26, 125 25 Q 123 33, 120 38 Q 122 33, 120 38 Q 118 42, 120 47 Q 130 75 , 102 94 Q 87 102, 65 96 C 55 92, 35 102 , 26 100 C 29 86, 32 76, 22 67 C 10 50, 20 30, 43 19 Z");   
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+#eyeLeft{
+    height: 100px;
+    width: 50px;
+    background-color: rgb(255, 255, 255);
+    clip-path: ellipse(4.5px 5.5px at 38.5px 63px);
+}
+#eyeRight{
+    height: 100px;
+    width: 50px;
+    background-color: rgb(255, 255, 255);
+    clip-path: ellipse(4.5px 5.5px at 10px 71px);
+}
+p{
+    color: green;  
+    font-family: 'Technology' ,sans-serif;
+    border-top: 3px solid green;
+    font-size: 25px;
+    padding: 10px 100px;
+    align-items: center;
+    margin-top: 1px;
+}
+
+#loading{
+    display: inline-block;
+    width: 1.5em; 
+    text-align: left;
+}
+#loading::after {
+    
+    content: ''; 
+    animation: loading-dots 1.5s infinite steps(4); 
+}
+
+@keyframes loading-dots {
+   
+    0% {
+        content: ''; 
+    }
+   
+    25% {
+        content: '.'; 
+    }
+    
+    50% {
+        content: '..'; 
+    }
+    
+    75% {
+        content: '...'; 
+    }
+    100% {
+        content: '....'; 
+    }
+}
