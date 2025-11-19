@@ -1,6 +1,7 @@
 
 body{
-    background-color: rgb(255, 255, 255);    
+    background-color: rgb(255, 255, 255);
+    margin: 0px;    
 }
 @font-face {
     font-family: 'Technology';
@@ -15,12 +16,8 @@ body{
     height: 100vh;
 }
 
-
-
-
-
 #foxhead{
-    fill: green;
+    fill: #008000;
  
 }
 #foxbody{
@@ -42,6 +39,7 @@ p{
     padding: 10px 150px;
     align-items: center;
     margin-top: 1px;
+    user-select: none;
 }
 
 #loading{
@@ -75,4 +73,37 @@ p{
     100% {
         content: '....'; 
     }
+}
+
+#soccer{
+    position: fixed;
+    z-index: 100;
+    pointer-events: none;
+    animation: rotate .5s infinite steps(5);
+    transform:translate(-120px, 33px) ;
+}
+@keyframes rotate {
+
+        0%{
+        transform:translate(-120px, 33px) rotate(0deg);
+    }
+        17%{
+        transform:translate(-120px, 33px) rotate(60deg);
+    }
+        34%{
+        transform:translate(-120px, 33px) rotate(120deg);
+    }
+        51%{
+        transform:translate(-120px, 33px) rotate(180deg);
+    }
+        68%{
+        transform:translate(-120px, 33px) rotate(240deg);
+    }
+        85%{
+        transform:translate(-120px, 33px) rotate(300deg);
+    }
+        100%{
+        transform:translate(-120px, 33px) rotate(360deg);
+    }
+
 }

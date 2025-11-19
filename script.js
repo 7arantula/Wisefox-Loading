@@ -18,8 +18,6 @@ let baseY = parseFloat(tokens[yIndex]);
 let baseX = parseFloat(tokens[xIndex]);
 let t = 0;
 
-
-
 function animate() {
     animating = true;
     tailStrength += (targetStrength - tailStrength) * ease;
@@ -32,7 +30,7 @@ function animate() {
         tokens[xIndex] = baseX + offsetY;
 
         foxBody.setAttribute("d", tokens.join(" "));
-        t += 0.1;
+        t += 0.3;
     }
 
     if (targetStrength === 0 && tailStrength < 0.001) {
@@ -40,7 +38,6 @@ function animate() {
         return; 
     }
     requestAnimationFrame(animate);
-    
 }
 
 document.addEventListener("mousedown", (e)=>{
@@ -61,7 +58,6 @@ document.addEventListener("mousemove", (e) => {
 });
 
 
-        
 const svg = document.querySelector("svg");
 const leftEye = document.getElementById("eyeLeft");
 const rightEye = document.getElementById("eyeRight");
@@ -79,8 +75,6 @@ function getSVGPoint(evt) {
   return pt.matrixTransform(svg.getScreenCTM().inverse());
 }
 
-
-
 function lookAt(mouse)
 {
     eyes.forEach(eye => {
@@ -93,8 +87,6 @@ function lookAt(mouse)
         let ex = dx / (rx - pupilR);
         let ey = dy / (ry - pupilR);
         let dist = Math.sqrt(ex*ex + ey*ey);
-
-    
 
         if (dist > 1) {
         ex /= dist;
