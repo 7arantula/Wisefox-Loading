@@ -1,63 +1,112 @@
-const foxBody = document.getElementById('foxbody');
+const foxBody = document.getElementById("foxbody");
 
-if (foxBody && CSS.supports('clip-path', 'path("M 0 0 L 1 1 Z")')) {
-    console.log("Start animation");
+let d = foxBody.getAttribute("d");
+let mousedown = false;
+let tailStrength = 0;      
+let targetStrength = 0;    
+let ease = 0.05;
+let animating = false;
 
-    const pathStart = "M 65 96 C 60 130, 35 130 , 42 179 Q 43 189, 47 198 L 53 197 L 56 185 C 67 188, 83 182, 89 195 C 90 200, 95 200, 99 195 C 100 192, 106 183, 120 192 C 130 200, 150 200, 161 190 Q 178 170, 175 140 C 170 120, 142 70, ";
-    const pathMiddle = " ";
-    const pathEnd = " C 130 80, 132 98, 140 120 C 146 140, 142 157, 131 157 C 120 157, 125 135, 120 127 C 110 110, 102 110, 102 93 L 102 94 Z";
 
-    foxBody.animate(
-        [
-            { '--tail-tip-y': '40' },
-            { '--tail-tip-y': '45' },
-            { '--tail-tip-y': '50' },
-            { '--tail-tip-y': '55' },
-            { '--tail-tip-y': '50' },
-            { '--tail-tip-y': '45' },
-        ],
-        {
-            duration: 1000,
-            iterations: Infinity,
-            easing: 'ease-in-out',
-            direction: 'alternate'
-        }
-    );
+// Convert to array of tokens (numbers, letters, commas)
+let tokens = d.split(/(\s|,)/).filter(t => t.trim() !== "");
 
-    foxBody.animate(
-        [
-            { '--tail-tip-x': '155' },
-            { '--tail-tip-x': '150' }, 
-            { '--tail-tip-x': '155' },
-            { '--tail-tip-x': '160' }, 
-            { '--tail-tip-x': '165' },
-            { '--tail-tip-x': '160' },  
-            { '--tail-tip-x': '155' },
-            { '--tail-tip-x': '150' }
-        ],
-        {
-            duration: 1000, 
-            iterations: Infinity,
-            easing: 'ease-in-out',
-            direction: 'alternate'
-        }
-    );
+let xIndex = tokens.indexOf("155");
+let yIndex = xIndex + 1;
 
-    // Use requestAnimationFrame to sync the DOM update with the animation
-    function updateClipPath() {
-        const computedStyle = getComputedStyle(foxBody);
-        const currentY = computedStyle.getPropertyValue('--tail-tip-y').trim();
-        const currentX = computedStyle.getPropertyValue('--tail-tip-x').trim();
+let baseY = parseFloat(tokens[yIndex]);
+let baseX = parseFloat(tokens[xIndex]);
+let t = 0;
 
-        foxBody.style.clipPath = `path("${pathStart}${currentX}${pathMiddle}${currentY}${pathEnd}")`;
 
-        requestAnimationFrame(updateClipPath);
+
+function animate() {
+    animating = true;
+    tailStrength += (targetStrength - tailStrength) * ease;
+
+    if (tailStrength > 0.001) {
+        let offsetX = Math.sin(t) * 5 * tailStrength;
+        tokens[yIndex] = baseY + offsetX;
+
+        let offsetY = Math.cos(t) * 15 * tailStrength;
+        tokens[xIndex] = baseX + offsetY;
+
+        foxBody.setAttribute("d", tokens.join(" "));
+        t += 0.1;
     }
 
+    if (targetStrength === 0 && tailStrength < 0.001) {
+        animating = false;
+        return; 
+    }
+    requestAnimationFrame(animate);
+    
+}
 
-    updateClipPath();
+document.addEventListener("mousedown", (e)=>{
+    mousedown = true;
+    const mouse = getSVGPoint(e);
+    lookAt(mouse);  
+    targetStrength = 1;   
+    if (!animating) requestAnimationFrame(animate);
+    });
+document.addEventListener("mouseup", (e)=>{
+    mousedown = false;
+    targetStrength = 0;   
+    if (!animating) requestAnimationFrame(animate);
+    });
+document.addEventListener("mousemove", (e) => {   
+    const mouse = getSVGPoint(e);
+    lookAt(mouse);    
+});
 
 
-} else {
-    console.warn("Animation not supported in this browser.");
+        
+const svg = document.querySelector("svg");
+const leftEye = document.getElementById("eyeLeft");
+const rightEye = document.getElementById("eyeRight");
+
+const eyes = [
+  { sclera:{cx:38.5, cy:63, rx:4.5, ry:5.5}, pupil:leftEye },
+  { sclera:{cx:63,   cy:69, rx:4.5, ry:5.5}, pupil:rightEye }
+];
+
+// Converting mouse to SVG coordinates
+function getSVGPoint(evt) {
+  const pt = svg.createSVGPoint();
+  pt.x = evt.clientX;
+  pt.y = evt.clientY;
+  return pt.matrixTransform(svg.getScreenCTM().inverse());
+}
+
+
+
+function lookAt(mouse)
+{
+    eyes.forEach(eye => {
+        const {cx, cy, rx, ry} = eye.sclera;
+        const pupilR = 2;
+
+        let dx = mouse.x - cx;
+        let dy = mouse.y - cy;
+
+        let ex = dx / (rx - pupilR);
+        let ey = dy / (ry - pupilR);
+        let dist = Math.sqrt(ex*ex + ey*ey);
+
+    
+
+        if (dist > 1) {
+        ex /= dist;
+        ey /= dist;
+        }
+
+        let px = cx + ex * (rx - pupilR);
+        let py = cy + ey * (ry - pupilR);
+
+        if(mousedown==true){
+            eye.pupil.setAttribute("cx", px);
+            eye.pupil.setAttribute("cy", py);    
+        }
+    });
 }
