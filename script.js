@@ -2,6 +2,7 @@ const foxBody = document.getElementById("foxbody");
 
 let d = foxBody.getAttribute("d");
 let mousedown = false;
+let touchstart = false;
 let tailStrength = 0;      
 let targetStrength = 0;    
 let ease = 0.05;
@@ -57,6 +58,34 @@ document.addEventListener("mousemove", (e) => {
     lookAt(mouse);    
 });
 
+document.addEventListener("touchstart", (e) =>{
+    touchstart = true;
+    targetStrength = 1; 
+    const touch = e.changedTouches[0];
+    if(touch){
+    const mouse = getSVGPoint(touch);
+    lookAt(mouse);
+    }
+    if (!animating) requestAnimationFrame(animate);
+});
+document.addEventListener("touchend", (e) =>{
+    touchstart = false;
+    targetStrength = 0; 
+    const touch = e.changedTouches[0];
+    if(touch){
+    const mouse = getSVGPoint(touch);
+    lookAt(mouse);
+    }
+    if (!animating) requestAnimationFrame(animate);
+});
+document.addEventListener("touchmove", (e) =>{
+    const touch = e.changedTouches[0];
+    if(touch){
+    const mouse = getSVGPoint(touch);
+    lookAt(mouse);
+    }
+});
+
 
 const svg = document.querySelector("svg");
 const leftEye = document.getElementById("eyeLeft");
@@ -96,9 +125,10 @@ function lookAt(mouse)
         let px = cx + ex * (rx - pupilR);
         let py = cy + ey * (ry - pupilR);
 
-        if(mousedown==true){
+        if(mousedown==true || touchstart==true){
             eye.pupil.setAttribute("cx", px);
             eye.pupil.setAttribute("cy", py);    
         }
     });
 }
+
