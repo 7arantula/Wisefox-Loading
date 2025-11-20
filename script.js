@@ -7,9 +7,8 @@ let tailStrength = 0;
 let targetStrength = 0;    
 let ease = 0.05;
 let animating = false;
+let kicked = false;
 
-
-// Convert to array of tokens (numbers, letters, commas)
 let tokens = d.split(/(\s|,)/).filter(t => t.trim() !== "");
 
 let xIndex = tokens.indexOf("155");
@@ -51,13 +50,13 @@ document.addEventListener("mousedown", (e)=>{
     lookAt(mouse);  
     targetStrength = 1;   
     if (!animating) requestAnimationFrame(animate);
-    });
+});
 
 document.addEventListener("mouseup", (e)=>{
     mousedown = false;
     targetStrength = 0;   
     if (!animating) requestAnimationFrame(animate);
-    });
+});
 
 document.addEventListener("mousemove", (e) => {   
     const mouse = getSVGPoint(e); 
@@ -110,7 +109,7 @@ const eyes = [
   { sclera:{cx:63,   cy:69, rx:4.5, ry:5.5}, pupil:rightEye }
 ];
 
-// Converting mouse to SVG coordinates
+// Converting Mouse to SvG coordinates.
 function getSVGPoint(evt) {
   const pt = svg.createSVGPoint();
   pt.x = evt.clientX;
@@ -146,3 +145,138 @@ function lookAt(mouse)
     });
 }
 
+
+let soccer = document.getElementById("soccer");
+let kick = document.getElementById("kick");
+kick.addEventListener("click", kickBall);
+let ballSvg = document.getElementById("ballSvg");
+let blinkSvg = document.getElementById("blink");
+
+
+
+function kickBall()
+{
+    blinkSvg.style.animation = 'none';
+    blinkSvg.style.strokeOpacity = '0';
+    kick.style.pointerEvents= 'none'; 
+
+
+    console.log("KickedBall to the fox");
+    const animateOut = soccer.animate([
+        { transform: 'translate(-90px, 33px) rotate(200deg)' }
+    ], {
+        
+        duration: 700, 
+        easing: 'ease-out',
+        iterations: 1, 
+        fill: 'forwards', 
+        
+    });
+
+    animateOut.finished.then(()=>{
+            return new Promise(resolve => setTimeout(resolve, 1000));
+        }).then (()=>{
+            kicked = false;
+            kickLeg();
+
+
+        const distanceX = -1000; 
+        const apexY = -700;
+        const startX = -90;
+        const startY = 33;
+        const totalRotation = -2000;
+        const endYOffset = 700;
+        const duration = 2500;
+        const keyframes = [];
+        const numKeyframes = 11;
+
+        for (let i = 0; i < numKeyframes; i++) {
+            const progress = i / (numKeyframes - 1);
+
+            const verticalProgress = 4 * progress * (1 - progress);
+            
+            const currentYOffset = endYOffset * progress;
+
+            const currentX = startX + (distanceX * progress);
+            const currentY = startY + (apexY * verticalProgress)+currentYOffset;
+
+            const currentRotation = totalRotation * progress;
+
+            keyframes.push({
+                transform: `translate(${currentX}px, ${currentY}px) rotate(${currentRotation}deg)`,
+            });
+        }
+
+        const soccerAnimation = soccer.animate(
+            keyframes , 
+            
+            { 
+                duration: duration, 
+                easing: 'linear',
+                iterations: 1, 
+                fill: 'forwards',
+            }
+
+        );
+            const timeBeforeEnd = 1000;
+            setTimeout(() => {
+                ballSvg.style.opacity = '0';
+            }, duration - timeBeforeEnd);
+            return soccerAnimation.finished;
+
+        }).then (()=>{
+            return new Promise(resolve => setTimeout(resolve, 400));
+
+        }).then (()=>{
+            kicked=true;
+            kickLeg();
+            
+        }).then (()=>{
+            return new Promise(resolve => setTimeout(resolve, 700));
+
+        }).then (()=>{    
+            soccer.getAnimations().forEach(animation => animation.cancel());
+            soccer.style.transform = 'translate(-220px, 33px)';
+            blinkSvg.style.animation = 'blinking 1.5s infinite steps(4)';
+            ballSvg.style.opacity = '1';
+            kick.style.pointerEvents= 'auto'; 
+        })
+        .catch(error => {
+        console.error("An animation step failed:", error);
+    });
+    
+}
+
+
+let LQ = 47.1 ;
+let RQ = 53.1 ;
+
+let lxIndex = tokens.indexOf(LQ.toString());
+let lyIndex = lxIndex + 1;
+let rxIndex = lyIndex + 2;
+
+let offset = 0;
+
+function kickLeg()
+{
+
+    if(kicked==false)
+    {
+        offset = -10;
+    }
+    else
+    {
+        offset = 10;
+    }
+    console.log(lxIndex+"  "+lyIndex+"  "+rxIndex)
+
+    let baseLy = parseFloat(tokens[lyIndex]);
+    let baseLx = parseFloat(tokens[lxIndex]);
+    let baseRx = parseFloat(tokens[rxIndex]);
+
+    tokens[lyIndex] = baseLy + offset;
+    tokens[lxIndex] = baseLx + offset;
+    tokens[rxIndex] = baseRx + offset;
+
+    foxBody.setAttribute("d", tokens.join(" "));
+}

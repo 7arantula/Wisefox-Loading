@@ -36,7 +36,7 @@ p{
     font-family: 'Technology' ,sans-serif;
     border-top: 3px solid green;
     font-size: 25px;
-    padding: 10px 150px;
+    padding: 10px 180px;
     align-items: center;
     margin-top: 1px;
     user-select: none;
@@ -76,34 +76,52 @@ p{
 }
 
 #soccer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: fixed;
     z-index: 100;
-    pointer-events: none;
-    animation: rotate .5s infinite steps(5);
-    transform:translate(-120px, 33px) ;
+    transform:translate(-220px, 33px) ;
 }
-@keyframes rotate {
 
-        0%{
-        transform:translate(-120px, 33px) rotate(0deg);
-    }
-        17%{
-        transform:translate(-120px, 33px) rotate(60deg);
-    }
-        34%{
-        transform:translate(-120px, 33px) rotate(120deg);
-    }
-        51%{
-        transform:translate(-120px, 33px) rotate(180deg);
-    }
-        68%{
-        transform:translate(-120px, 33px) rotate(240deg);
-    }
-        85%{
-        transform:translate(-120px, 33px) rotate(300deg);
-    }
-        100%{
-        transform:translate(-120px, 33px) rotate(360deg);
-    }
 
+#kick{
+    position: fixed;
+    z-index: 110;
+    padding: 30px 30px;
+    background-color: transparent;
+    border-radius: 50%;
+    border:none;
+}
+#blink{
+    content: '';
+    animation: blinking 1.5s infinite steps(4); 
+}
+@keyframes blinking {
+
+    0%{
+        stroke-width: 10;
+        stroke-opacity: .02;
+    }
+    25%{
+        stroke-width: 14;
+        stroke-opacity: .08;
+    }
+    50%{
+        stroke-width: 17;
+        stroke-opacity: .16;
+    }
+    75%{
+        stroke-width: 19;
+        stroke-opacity: .08;
+    }
+    100%{
+        stroke-width: 20;
+        stroke-opacity: .02;
+    }
+}
+
+
+#ballSvg {
+  transition: opacity 1s ease-in-out; 
 }
