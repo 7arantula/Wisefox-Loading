@@ -36,10 +36,14 @@ function animate() {
 
     if (targetStrength === 0 && tailStrength < 0.001) {
         animating = false;
+        t = 0;
         return; 
+        
     }
     requestAnimationFrame(animate);
 }
+
+
 
 document.addEventListener("mousedown", (e)=>{
     mousedown = true;
@@ -48,17 +52,20 @@ document.addEventListener("mousedown", (e)=>{
     targetStrength = 1;   
     if (!animating) requestAnimationFrame(animate);
     });
+
 document.addEventListener("mouseup", (e)=>{
     mousedown = false;
     targetStrength = 0;   
     if (!animating) requestAnimationFrame(animate);
     });
+
 document.addEventListener("mousemove", (e) => {   
     const mouse = getSVGPoint(e);
     lookAt(mouse);    
 });
 
 document.addEventListener("touchstart", (e) =>{
+    e.preventDefault();
     touchstart = true;
     targetStrength = 1; 
     const touch = e.changedTouches[0];
@@ -67,8 +74,10 @@ document.addEventListener("touchstart", (e) =>{
     lookAt(mouse);
     }
     if (!animating) requestAnimationFrame(animate);
-});
+},{ passive: false });
+
 document.addEventListener("touchend", (e) =>{
+    
     touchstart = false;
     targetStrength = 0; 
     const touch = e.changedTouches[0];
@@ -78,6 +87,7 @@ document.addEventListener("touchend", (e) =>{
     }
     if (!animating) requestAnimationFrame(animate);
 });
+
 document.addEventListener("touchmove", (e) =>{
     const touch = e.changedTouches[0];
     if(touch){
@@ -85,6 +95,9 @@ document.addEventListener("touchmove", (e) =>{
     lookAt(mouse);
     }
 });
+
+
+
 
 
 const svg = document.querySelector("svg");
