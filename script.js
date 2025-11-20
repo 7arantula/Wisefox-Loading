@@ -60,7 +60,7 @@ document.addEventListener("mouseup", (e)=>{
     });
 
 document.addEventListener("mousemove", (e) => {   
-    const mouse = getSVGPoint(e);
+    const mouse = getSVGPoint(e); 
     lookAt(mouse);    
 });
 
@@ -92,6 +92,7 @@ document.addEventListener("touchmove", (e) =>{
     const touch = e.changedTouches[0];
     if(touch){
     const mouse = getSVGPoint(touch);
+    targetStrength = 1;
     lookAt(mouse);
     }
 });
