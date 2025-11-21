@@ -1,7 +1,8 @@
 
 body{
     background-color: rgb(255, 255, 255);
-    margin: 0px;    
+    margin: 0px;
+       
 }
 @font-face {
     font-family: 'Technology';
@@ -14,6 +15,10 @@ body{
     justify-content: center;
     align-items: center;
     height: 100vh;
+    
+}
+#fox {
+    position: relative;
 }
 
 #foxhead{
@@ -40,17 +45,20 @@ p{
     align-items: center;
     margin-top: 1px;
     user-select: none;
+    
 }
 
 #loading{
     display: inline-block;
     width: 1em; 
     text-align: left;
+    position: absolute;
 }
 #loading::after {
     
     content: ''; 
     animation: loading-dots 1.5s infinite steps(4); 
+
 }
 
 @keyframes loading-dots {
@@ -79,7 +87,7 @@ p{
     display: flex;
     justify-content: center;
     align-items: center;
-    position: fixed;
+    position: absolute;
     z-index: 100;
     transform:translate(-220px, 33px) ;
 }
